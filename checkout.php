@@ -22,7 +22,7 @@ if (isset($_POST['order'])) {
    $email = filter_var($email, FILTER_SANITIZE_STRING);
    $method = $_POST['method'];
    $method = filter_var($method, FILTER_SANITIZE_STRING);
-   $address = 'flat no. ' . $_POST['flat'] . ', ' . $_POST['street'] . ', ' . $_POST['city'] . ' - ' . $_POST['pin_code'];
+   $address = $_POST['flat'] . ', ' . $_POST['street'] . ', ' . $_POST['city'] . ' - ' . $_POST['pin_code'];
    $address = filter_var($address, FILTER_SANITIZE_STRING);
    $total_products = $_POST['total_products'];
    $total_price = $_POST['total_price'];
@@ -32,7 +32,7 @@ if (isset($_POST['order'])) {
 
    if ($check_cart->rowCount() > 0) {
 
-      $insert_order = $conn->prepare("INSERT INTO `orders`(user_id, name, number, email, method, address, total_products, total_price) VALUES(?,?,?,?,?,?,?,?)");
+      $insert_order = $conn->prepare("INSERT INTO `bookings`(user_id, name, number, email, method, address, total_products, total_price) VALUES(?,?,?,?,?,?,?,?)");
       $insert_order->execute([$user_id, $name, $number, $email, $method, $address, $total_products, $total_price]);
 
       $delete_cart = $conn->prepare("DELETE FROM `cart` WHERE user_id = ?");
@@ -78,7 +78,7 @@ if (isset($_POST['order'])) {
             <?php
             $grand_total = 0;
             $cart_items[] = '';
-            $select_cart = $conn->prepare("SELECT * FROM `services` WHERE user_id = ?");
+            $select_cart = $conn->prepare("SELECT * FROM `cart` WHERE user_id = ?");
             $select_cart->execute([$user_id]);
             if ($select_cart->rowCount() > 0) {
                while ($fetch_cart = $select_cart->fetch(PDO::FETCH_ASSOC)) {

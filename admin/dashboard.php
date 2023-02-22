@@ -48,7 +48,7 @@ if (!isset($admin_id)) {
          <div class="box">
             <?php
             $total_pendings = 0;
-            $select_pendings = $conn->prepare("SELECT * FROM `orders` WHERE payment_status = ?");
+            $select_pendings = $conn->prepare("SELECT * FROM `bookings` WHERE payment_status = ?");
             $select_pendings->execute(['pending']);
             if ($select_pendings->rowCount() > 0) {
                while ($fetch_pendings = $select_pendings->fetch(PDO::FETCH_ASSOC)) {
@@ -60,13 +60,13 @@ if (!isset($admin_id)) {
                <?= $total_pendings; ?>
             </h3>
             <p>total pendings</p>
-            <a href="placed_orders.php" class="btn">see orders</a>
+            <a href="placed_orders.php" class="btn">see bookings</a>
          </div>
 
          <div class="box">
             <?php
             $total_completes = 0;
-            $select_completes = $conn->prepare("SELECT * FROM `orders` WHERE payment_status = ?");
+            $select_completes = $conn->prepare("SELECT * FROM `bookings` WHERE payment_status = ?");
             $select_completes->execute(['completed']);
             if ($select_completes->rowCount() > 0) {
                while ($fetch_completes = $select_completes->fetch(PDO::FETCH_ASSOC)) {
@@ -77,34 +77,34 @@ if (!isset($admin_id)) {
             <h3><span>₱</span>
                <?= $total_completes; ?>
             </h3>
-            <p>completed orders</p>
-            <a href="placed_orders.php" class="btn">see orders</a>
+            <p>completed bookings</p>
+            <a href="placed_orders.php" class="btn">see bookings</a>
          </div>
 
          <div class="box">
             <?php
-            $select_orders = $conn->prepare("SELECT * FROM `orders`");
+            $select_orders = $conn->prepare("SELECT * FROM `bookings`");
             $select_orders->execute();
             $number_of_orders = $select_orders->rowCount()
                ?>
             <h3>
                <?= $number_of_orders; ?>
             </h3>
-            <p>orders placed</p>
-            <a href="placed_orders.php" class="btn">see orders</a>
+            <p>bookings placed</p>
+            <a href="placed_orders.php" class="btn">see bookings</a>
          </div>
 
          <div class="box">
             <?php
-            $select_products = $conn->prepare("SELECT * FROM `products`");
+            $select_products = $conn->prepare("SELECT * FROM `services`");
             $select_products->execute();
             $number_of_products = $select_products->rowCount()
                ?>
             <h3>
                <?= $number_of_products; ?>
             </h3>
-            <p>products added</p>
-            <a href="products.php" class="btn">see products</a>
+            <p>services added</p>
+            <a href="products.php" class="btn">see services</a>
          </div>
 
          <div class="box">
@@ -116,8 +116,8 @@ if (!isset($admin_id)) {
             <h3>
                <?= $number_of_users; ?>
             </h3>
-            <p>normal users</p>
-            <a href="users_accounts.php" class="btn">see users</a>
+            <p>customers</p>
+            <a href="users_accounts.php" class="btn">see customers</a>
          </div>
 
          <div class="box">

@@ -8,29 +8,7 @@ if(isset($_SESSION['user_id'])){
    $user_id = $_SESSION['user_id'];
 }else{
    $user_id = '';
-   header('location:user_login.php');
 };
-
-if(isset($_POST['delete'])){
-   $cart_id = $_POST['cart_id'];
-   $delete_cart_item = $conn->prepare("DELETE FROM `services` WHERE id = ?");
-   $delete_cart_item->execute([$cart_id]);
-}
-
-if(isset($_GET['delete_all'])){
-   $delete_cart_item = $conn->prepare("DELETE FROM `services` WHERE user_id = ?");
-   $delete_cart_item->execute([$user_id]);
-   header('location:cart.php');
-}
-
-if(isset($_POST['update_qty'])){
-   $cart_id = $_POST['cart_id'];
-   $qty = $_POST['qty'];
-   $qty = filter_var($qty, FILTER_SANITIZE_STRING);
-   $update_qty = $conn->prepare("UPDATE `services` SET quantity = ? WHERE id = ?");
-   $update_qty->execute([$qty, $cart_id]);
-   $message[] = 'services quantity updated';
-}
 
 ?>
 
@@ -40,7 +18,7 @@ if(isset($_POST['update_qty'])){
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>bookings</title>
+   <title>orders</title>
    
    <!-- font awesome cdn link  -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
@@ -53,43 +31,40 @@ if(isset($_POST['update_qty'])){
    
 <?php include 'components/user_header.php'; ?>
 
-<section class="products shopping-cart">
+<section class="orders">
 
-   <h3 class="heading">Bookings</h3>
+   <h1 class="heading">placed bookings</h1>
 
    <div class="box-container">
 
    <?php
-      $grand_total = 0;
-      $select_cart = $conn->prepare("SELECT * FROM `services` WHERE user_id = ?");
-      $select_cart->execute([$user_id]);
-      if($select_cart->rowCount() > 0){
-         while($fetch_cart = $select_cart->fetch(PDO::FETCH_ASSOC)){
+      if($user_id == ''){
+         echo '<p class="empty">please login to see your orders</p>';
+      }else{
+         $select_orders = $conn->prepare("SELECT * FROM `bookings` WHERE user_id = ?");
+         $select_orders->execute([$user_id]);
+         if($select_orders->rowCount() > 0){
+            while($fetch_orders = $select_orders->fetch(PDO::FETCH_ASSOC)){
    ?>
-   <form action="" method="post" class="box">
-      <input type="hidden" name="cart_id" value="<?= $fetch_cart['id']; ?>">
-      <a href="quick_view.php?pid=<?= $fetch_cart['pid']; ?>" class="fas fa-eye"></a>
-      <img src="uploaded_img/<?= $fetch_cart['image']; ?>" alt="">
-      <div class="name"><?= $fetch_cart['name']; ?></div>
-      <div class="flex">
-         <div class="price">₱<?= $fetch_cart['price']; ?></div>
-      </div>
-      <input type="submit" value="delete item" onclick="return confirm('delete this from bookings?');" class="delete-btn" name="delete">
-   </form>
-   <?php
-   $grand_total += $fetch_cart['price'];
-      }
-   }else{
-      echo '<p class="empty">your cart is empty</p>';
-   }
-   ?>
+   <div class="box">
+      <p>placed on : <span><?= $fetch_orders['placed_on']; ?></span></p>
+      <p>name : <span><?= $fetch_orders['name']; ?></span></p>
+      <p>email : <span><?= $fetch_orders['email']; ?></span></p>
+      <p>number : <span><?= $fetch_orders['number']; ?></span></p>
+      <p>address : <span><?= $fetch_orders['address']; ?></span></p>
+      <p>payment method : <span><?= $fetch_orders['method']; ?></span></p>
+      <p>your orders : <span><?= $fetch_orders['total_products']; ?></span></p>
+      <p>total price : <span>₱<?= $fetch_orders['total_price']; ?></span></p>
+      <p> payment status : <span style="color:<?php if($fetch_orders['payment_status'] == 'pending'){ echo 'red'; }else{ echo 'green'; }; ?>"><?= $fetch_orders['payment_status']; ?></span> </p>
    </div>
+   <?php
+      }
+      }else{
+         echo '<p class="empty">no bookings placed yet!</p>';
+      }
+      }
+   ?>
 
-   <div class="cart-total">
-      <p>grand total : <span>₱<?= $grand_total; ?></span></p>
-      <a href="shop.php" class="option-btn">continue Browsing</a>
-      <a href="cart.php?delete_all" class="delete-btn <?= ($grand_total > 1)?'':'disabled'; ?>" onclick="return confirm('delete all from bookings?');">Delete All Services</a>
-      <a href="checkout.php" class="btn <?= ($grand_total > 1)?'':'disabled'; ?>">proceed to checkout</a>
    </div>
 
 </section>

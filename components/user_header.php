@@ -20,7 +20,7 @@ if (isset($message)) {
       <nav class="navbar">
          <a href="index.php">Home</a>
          <a href="about.php">About</a>
-         <a href="orders.php">Bookings</a>
+         <a href="bookings.php">Bookings</a>
          <a href="shop.php">Services</a>
          <a href="contact.php">Contact</a>
       </nav>
@@ -31,7 +31,7 @@ if (isset($message)) {
          $count_wishlist_items->execute([$user_id]);
          $total_wishlist_counts = $count_wishlist_items->rowCount();
 
-         $count_cart_items = $conn->prepare("SELECT * FROM `services` WHERE user_id = ?");
+         $count_cart_items = $conn->prepare("SELECT * FROM `cart` WHERE user_id = ?");
          $count_cart_items->execute([$user_id]);
          $total_cart_counts = $count_cart_items->rowCount();
          ?>
@@ -40,7 +40,7 @@ if (isset($message)) {
          <a href="wishlist.php"><i class="fas fa-heart"></i><span>(
                <?= $total_wishlist_counts; ?>)
             </span></a>
-         <a href="bookings.php"><i class="fas fa-bookmark"></i><span>(
+         <a href="cart.php"><i class="fas fa-shopping-cart"></i><span>(
                <?= $total_cart_counts; ?>)
             </span></a>
          <div id="user-btn" class="fas fa-user"></div>
@@ -57,10 +57,6 @@ if (isset($message)) {
                <?= $fetch_profile["name"]; ?>
             </p>
             <a href="update_user.php" class="btn">update profile</a>
-            <div class="flex-btn">
-               <a href="user_register.php" class="option-btn">register</a>
-               <a href="user_login.php" class="option-btn">login</a>
-            </div>
             <a href="components/user_logout.php" class="delete-btn"
                onclick="return confirm('logout from the website?');">logout</a>
             <?php

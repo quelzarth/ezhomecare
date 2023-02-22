@@ -14,7 +14,7 @@ if(isset($_GET['delete'])){
    $delete_id = $_GET['delete'];
    $delete_user = $conn->prepare("DELETE FROM `users` WHERE id = ?");
    $delete_user->execute([$delete_id]);
-   $delete_orders = $conn->prepare("DELETE FROM `orders` WHERE user_id = ?");
+   $delete_orders = $conn->prepare("DELETE FROM `bookings` WHERE user_id = ?");
    $delete_orders->execute([$delete_id]);
    $delete_messages = $conn->prepare("DELETE FROM `messages` WHERE user_id = ?");
    $delete_messages->execute([$delete_id]);
@@ -46,7 +46,7 @@ if(isset($_GET['delete'])){
 
 <section class="accounts">
 
-   <h1 class="heading">user accounts</h1>
+   <h1 class="heading">customer accounts</h1>
 
    <div class="box-container">
 

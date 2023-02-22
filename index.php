@@ -47,7 +47,7 @@ include 'components/wishlist_cart.php';
          <div class="swiper-wrapper">
 
             <?php
-            $select_products = $conn->prepare("SELECT * FROM `products` LIMIT 6");
+            $select_products = $conn->prepare("SELECT * FROM `services` LIMIT 6");
             $select_products->execute();
             if ($select_products->rowCount() > 0) {
                while ($fetch_product = $select_products->fetch(PDO::FETCH_ASSOC)) {
@@ -73,7 +73,7 @@ include 'components/wishlist_cart.php';
                   <?php
                }
             } else {
-               echo '<p class="empty">no products added yet!</p>';
+               echo '<p class="empty">no services added yet!</p>';
             }
             ?>
 

@@ -18,25 +18,6 @@ if (isset($_POST['submit'])) {
    $pass = sha1($_POST['pass']);
    $pass = filter_var($pass, FILTER_SANITIZE_STRING);
 
-   // $conn = mysqli_connect("localhost", "root", "", "ezhomecare");
-   // $sql = "SELECT * FROM users where email = '" . $email . "'";
-   // $result = mysqli_query($conn, $sql);
-
-   // if (mysqli_num_rows($result) == 0) {
-   //    die("Email not found.");
-   // }
-
-   // $user = mysqli_fetch_object($result);
-   // if (!password_verify($pass, $user->password)) {
-   //    die("Password is not correct.");
-   // }
-
-   // if ($user->email_verified_at == null) {
-   //    die("Please verify your email. <a href='email-verification.php?email=" . $email . "'>Click Here</a>");
-   // }
-
-   // header('location:index.php');
-
    $select_user = $conn->prepare("SELECT * FROM `users` WHERE email = ? AND password = ?");
    $select_user->execute([$email, $pass]);
    $row = $select_user->fetch(PDO::FETCH_ASSOC);
@@ -46,6 +27,7 @@ if (isset($_POST['submit'])) {
    }
 
    else if ($select_user->rowCount() > 0 && $row['email_verified_at'] != null) {
+      $_SESSION['user_id'] = $row['id'];
       header('location:index.php');
    } else {
       $message[] = 'account does not exist';
