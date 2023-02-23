@@ -37,9 +37,6 @@ if (isset($message)) {
          ?>
          <div id="menu-btn" class="fas fa-bars"></div>
          <a href="search_page.php"><i class="fas fa-search"></i></a>
-         <a href="wishlist.php"><i class="fas fa-heart"></i><span>(
-               <?= $total_wishlist_counts; ?>)
-            </span></a>
          <a href="cart.php"><i class="fas fa-shopping-cart"></i><span>(
                <?= $total_cart_counts; ?>)
             </span></a>

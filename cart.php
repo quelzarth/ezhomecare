@@ -20,7 +20,7 @@ if(isset($_POST['delete'])){
 if(isset($_GET['delete_all'])){
    $delete_cart_item = $conn->prepare("DELETE FROM `cart` WHERE user_id = ?");
    $delete_cart_item->execute([$user_id]);
-   header('location:bookings.php');
+   header('location:cart.php');
 }
 
 if(isset($_POST['update_qty'])){
@@ -40,7 +40,7 @@ if(isset($_POST['update_qty'])){
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>bookings</title>
+   <title>cart</title>
    
    <!-- font awesome cdn link  -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
@@ -74,7 +74,7 @@ if(isset($_POST['update_qty'])){
       <div class="flex">
          <div class="price">₱<?= $fetch_cart['price']; ?></div>
       </div>
-      <input type="submit" value="delete item" onclick="return confirm('delete this from bookings?');" class="delete-btn" name="delete">
+      <input type="submit" value="delete service" onclick="return confirm('delete this from bookings?');" class="delete-btn" name="delete">
    </form>
    <?php
    $grand_total += $fetch_cart['price'];
@@ -88,7 +88,7 @@ if(isset($_POST['update_qty'])){
    <div class="cart-total">
       <p>grand total : <span>₱<?= $grand_total; ?></span></p>
       <a href="shop.php" class="option-btn">continue Browsing</a>
-      <a href="bookings.php?delete_all" class="delete-btn <?= ($grand_total > 1)?'':'disabled'; ?>" onclick="return confirm('delete all from bookings?');">Delete All Services</a>
+      <a href="cart.php?delete_all" class="delete-btn <?= ($grand_total > 1)?'':'disabled'; ?>" onclick="return confirm('delete all from bookings?');">Delete All Services</a>
       <a href="checkout.php" class="btn <?= ($grand_total > 1)?'':'disabled'; ?>">proceed to checkout</a>
    </div>
 
