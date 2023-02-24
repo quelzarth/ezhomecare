@@ -33,11 +33,11 @@ if (isset($_POST['submit'])) {
       $mail->isSMTP();
       $mail->Host = 'smtp.gmail.com';
       $mail->SMTPAuth = true;
-      $mail->Username = 'brosennjeimar@gmail.com';
-      $mail->Password = 'jixczaigfbdzwozu';
+      $mail->Username = 'ezhomecareph@gmail.com';
+      $mail->Password = 'hlwfuaqwejjcyhhd';
       $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
       $mail->Port = 587;
-      $mail->setFrom('brosennjeimar@gmail.com', 'ezhomecare.great-site.net');
+      $mail->setFrom('ezhomecareph@gmail.com', 'ezhomecare.great-site.net');
       $mail->addAddress($email, $name);
       $mail->isHTML(true);
       $verification_code = substr(number_format(time() * rand(), 0, '', ''), 0, 6);
@@ -96,13 +96,15 @@ if (isset($_POST['submit'])) {
 
       <form action="" method="post">
          <h3>register now</h3>
-         <input type="text" name="name" required placeholder="enter your username" maxlength="20" class="box">
-         <input type="email" name="email" required placeholder="enter your email" maxlength="50" class="box"
+         <input type="text" name="name" required placeholder="enter your username (required)" maxlength="20" class="box">
+         <input type="email" name="email" required placeholder="enter your email (required" maxlength="50" class="box"
             oninput="this.value = this.value.replace(/\s/g, '')">
-         <input type="password" name="pass" required placeholder="enter your password" maxlength="20" class="box"
+         <input type="password" name="pass" required placeholder="enter your password (required)" maxlength="20" class="box"
             oninput="this.value = this.value.replace(/\s/g, '')">
-         <input type="password" name="cpass" required placeholder="confirm your password" maxlength="20" class="box"
+         <input type="password" name="cpass" required placeholder="confirm your password (required)" maxlength="20" class="box"
             oninput="this.value = this.value.replace(/\s/g, '')">
+            <p> By clicking Register Now, you agree with our 
+               <a href="tos.php" target="_blank">Terms of Service</a><p>
          <input type="submit" value="register now" class="btn" name="submit">
          <p>already have an account?</p>
          <a href="user_login.php" class="option-btn">login now</a>

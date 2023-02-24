@@ -6,11 +6,11 @@ session_start();
 
 $admin_id = $_SESSION['admin_id'];
 
-if(!isset($admin_id)){
+if (!isset($admin_id)) {
    header('location:admin_login.php');
 }
 
-if(isset($_POST['update_payment'])){
+if (isset($_POST['update_payment'])) {
    $order_id = $_POST['order_id'];
    $payment_status = $_POST['payment_status'];
    $payment_status = filter_var($payment_status, FILTER_SANITIZE_STRING);
@@ -19,8 +19,12 @@ if(isset($_POST['update_payment'])){
    $message[] = 'payment status updated!';
 }
 
-if(isset($_GET['delete'])){
+if (isset($_GET['delete'])) {
    $delete_id = $_GET['delete'];
+   $delete_product_image = $conn->prepare("SELECT * FROM `bookings` WHERE id = ?");
+   $delete_product_image->execute([$delete_id]);
+   $fetch_delete_image = $delete_product_image->fetch(PDO::FETCH_ASSOC);
+   unlink('../uploaded_img/' . $fetch_delete_image['proof_of_payment']);
    $delete_order = $conn->prepare("DELETE FROM `bookings` WHERE id = ?");
    $delete_order->execute([$delete_id]);
    header('location:placed_orders.php');
@@ -30,6 +34,7 @@ if(isset($_GET['delete'])){
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -41,55 +46,79 @@ if(isset($_GET['delete'])){
    <link rel="stylesheet" href="../css/admin_style.css">
 
 </head>
+
 <body>
 
-<?php include '../components/admin_header.php'; ?>
+   <?php include '../components/admin_header.php'; ?>
 
-<section class="orders">
+   <section class="orders">
 
-<h1 class="heading">placed bookings</h1>
+      <h1 class="heading">placed bookings</h1>
 
-<div class="box-container">
+      <div class="box-container">
 
-   <?php
-      $select_orders = $conn->prepare("SELECT * FROM `bookings`");
-      $select_orders->execute();
-      if($select_orders->rowCount() > 0){
-         while($fetch_orders = $select_orders->fetch(PDO::FETCH_ASSOC)){
-   ?>
-   <div class="box">
-      <p> placed on : <span><?= $fetch_orders['placed_on']; ?></span> </p>
-      <p> name : <span><?= $fetch_orders['name']; ?></span> </p>
-      <p> number : <span><?= $fetch_orders['number']; ?></span> </p>
-      <p> address : <span><?= $fetch_orders['address']; ?></span> </p>
-      <p> services : <span><?= $fetch_orders['total_products']; ?></span> </p>
-      <p> total price : <span>₱<?= $fetch_orders['total_price']; ?></span> </p>
-      <p> payment method : <span><?= $fetch_orders['method']; ?></span> </p>
-      <form action="" method="post">
-         <input type="hidden" name="order_id" value="<?= $fetch_orders['id']; ?>">
-         <select name="payment_status" class="select">
-            <option selected disabled><?= $fetch_orders['payment_status']; ?></option>
-            <option value="pending">pending</option>
-            <option value="completed">completed</option>
-         </select>
-        <div class="flex-btn">
-         <input type="submit" value="update" class="option-btn" name="update_payment">
-         <a href="placed_orders.php?delete=<?= $fetch_orders['id']; ?>" class="delete-btn" onclick="return confirm('delete this order?');">delete</a>
-        </div>
-      </form>
-   </div>
-   <?php
+         <?php
+         $select_orders = $conn->prepare("SELECT * FROM `bookings`");
+         $select_orders->execute();
+         if ($select_orders->rowCount() > 0) {
+            while ($fetch_orders = $select_orders->fetch(PDO::FETCH_ASSOC)) {
+               ?>
+               <div class="box">
+                  <p> placed on : <span>
+                        <?= $fetch_orders['placed_on']; ?>
+                     </span> </p>
+                  <p> name : <span>
+                        <?= $fetch_orders['name']; ?>
+                     </span> </p>
+                  <p> number : <span>
+                        <?= $fetch_orders['number']; ?>
+                     </span> </p>
+                  <p> address : <span>
+                        <?= $fetch_orders['address']; ?>
+                     </span> </p>
+                  <p> date of service : <span>
+                        <?= $fetch_orders['service_date']; ?>
+                     </span> </p>
+                  <p> services : <span>
+                        <?= $fetch_orders['total_products']; ?>
+                     </span> </p>
+                  <p> total price : <span>₱
+                        <?= $fetch_orders['total_price']; ?>
+                     </span> </p>
+                  <p> payment method : <span>
+                        <?= $fetch_orders['method']; ?>
+                     </span> </p>
+                  <p>proof of payment : <img src="../uploaded_img/<?= $fetch_orders['proof_of_payment']; ?>" width="250"
+                        height="auto"></p>
+                  <form action="" method="post">
+                     <input type="hidden" name="order_id" value="<?= $fetch_orders['id']; ?>">
+                     <select name="payment_status" class="select">
+                        <option selected disabled>
+                           <?= $fetch_orders['payment_status']; ?>
+                        </option>
+                        <option value="pending">pending</option>
+                        <option value="approved">approved</option>
+                        <option value="completed">completed</option>
+                     </select>
+                     <div class="flex-btn">
+                        <input type="submit" value="update" class="option-btn" name="update_payment">
+                        <a href="placed_orders.php?delete=<?= $fetch_orders['id']; ?>" class="delete-btn"
+                           onclick="return confirm('delete this order?');">delete</a>
+                     </div>
+                  </form>
+               </div>
+               <?php
+            }
+         } else {
+            echo '<p class="empty">no bookings placed yet!</p>';
          }
-      }else{
-         echo '<p class="empty">no bookings placed yet!</p>';
-      }
-   ?>
+         ?>
 
-</div>
+      </div>
 
-</section>
+   </section>
 
-</section>
+   </section>
 
 
 
@@ -102,7 +131,8 @@ if(isset($_GET['delete'])){
 
 
 
-<script src="../js/admin_script.js"></script>
-   
+   <script src="../js/admin_script.js"></script>
+
 </body>
+
 </html>

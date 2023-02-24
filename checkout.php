@@ -24,16 +24,33 @@ if (isset($_POST['order'])) {
    $method = filter_var($method, FILTER_SANITIZE_STRING);
    $address = $_POST['flat'] . ', ' . $_POST['street'] . ', ' . $_POST['city'] . ' - ' . $_POST['pin_code'];
    $address = filter_var($address, FILTER_SANITIZE_STRING);
+   $service_date = $_POST['service_date'];
+   $service_date = filter_var($service_date, FILTER_SANITIZE_STRING);
    $total_products = $_POST['total_products'];
    $total_price = $_POST['total_price'];
+
+   $proof_of_payment = $_FILES['proof_of_payment']['name'];
+   $proof_of_payment = filter_var($proof_of_payment, FILTER_SANITIZE_STRING);
+   $proof_of_payment_size = $_FILES['proof_of_payment']['size'];
+   $proof_of_payment_tmp_name = $_FILES['proof_of_payment']['tmp_name'];
+   $proof_of_payment_folder = 'uploaded_img/'.$proof_of_payment;
 
    $check_cart = $conn->prepare("SELECT * FROM `cart` WHERE user_id = ?");
    $check_cart->execute([$user_id]);
 
    if ($check_cart->rowCount() > 0) {
 
-      $insert_order = $conn->prepare("INSERT INTO `bookings`(user_id, name, number, email, method, address, total_products, total_price) VALUES(?,?,?,?,?,?,?,?)");
-      $insert_order->execute([$user_id, $name, $number, $email, $method, $address, $total_products, $total_price]);
+      $insert_order = $conn->prepare("INSERT INTO `bookings`(user_id, name, number, email, method, address, service_date, total_products, total_price, proof_of_payment) VALUES(?,?,?,?,?,?,?,?,?,?)");
+      $insert_order->execute([$user_id, $name, $number, $email, $method, $address, $service_date, $total_products, $total_price, $proof_of_payment]);
+
+      if($insert_order){
+         if($proof_of_payment_size > 2000000){
+            $message[] = 'image size is too large!';
+         }else{
+            move_uploaded_file($proof_of_payment_tmp_name, $proof_of_payment_folder);
+         }
+
+      }
 
       $delete_cart = $conn->prepare("DELETE FROM `cart` WHERE user_id = ?");
       $delete_cart->execute([$user_id]);
@@ -70,7 +87,7 @@ if (isset($_POST['order'])) {
 
    <section class="checkout-orders">
 
-      <form action="" method="POST">
+      <form action="" method="POST" enctype="multipart/form-data">
 
          <h3>Your Services</h3>
 
@@ -123,10 +140,8 @@ if (isset($_POST['order'])) {
             <div class="inputBox">
                <span>Payment Method :</span>
                <select name="method" class="box" required>
-                  <option value="cash on delivery">Cash on Delivery</option>
-                  <option value="credit card">Credit Card</option>
                   <option value="gcash">GCash</option>
-                  <option value="paypal">PayPal</option>
+                  <option value="bank transfer">Bank Transfer</option>
                </select>
             </div>
             <div class="inputBox">
@@ -140,16 +155,60 @@ if (isset($_POST['order'])) {
             </div>
             <div class="inputBox">
                <span>City :</span>
-               <input type="text" name="city" placeholder="e.g. Quezon City" class="box" maxlength="50" required>
+               <select name="city" class="box" required>
+                  <option value="Tungko, Bulacan">Tungko, Bulacan</option>
+                  <option value="Quezon">Quezon City</option>
+                  <option value="Makati">Makati</option>
+                  <option value="Manila">Manila</option>
+               </select>
             </div>
             <div class="inputBox">
-               <span>Pin Code :</span>
+               <span>Zip Code :</span>
                <input type="number" min="0" name="pin_code" placeholder="e.g. 3032" min="0" max="999999"
                   onkeypress="if(this.value.length == 4) return false;" class="box" required>
             </div>
+            <div class="inputBox">
+               <span>Date of Service :</span>
+               <input type="date" name="service_date" class="box" min="<?php echo date("Y-m-d"); ?>" required>
+            </div>
+            <div class="inputBox">
+            </div>
+            <div class="inputBox">
+               <span><b>*READ BEFORE PROCEEDING*</b></span>
+            </div>
+            <div class="inputBox">
+            </div>
+            <div class="inputBox">
+               <span>*A downpayment of 50% of total price should be paid upon booking with <b>GCash</b> or <b>Bank
+                     Transfer</b></span>
+            </div>
+            <div class="inputBox">
+               <span>*The remaining 50% of total price will be paid upfront upon staff arrival</span>
+            </div>
+            <div class="inputBox">
+               <span><b>GCash QR Code :</b> </span>
+               <img src="images/gcash.jpg" alt="" width="400" height="auto">
+            </div>
+            <div class="inputBox">
+               <span><b>Bank Transfer Details :</b> </span>
+               </br> </br>
+               <span><b>Account Name:</b> Gerlie Mariel Fernandez </br>
+                  <b>Account:</b> 001271647735 </br>
+                  <b>Bank:</b></br>BDO UNIBANK, INC. </br>
+                  7899 </br>
+                  BDO CORPORATE CENTER </br>
+                  CITY OF MAKATI Philippines </br>
+                  <b>SWIFT/BIC:</b> BNORPHMM</span>
+            </div>
+            <div class="inputBox">
+               <span>Proof of Payment (50% Downpayment)</span>
+               <input type="file" name="proof_of_payment" accept="image/jpg, image/jpeg, image/png, image/webp"
+                  class="box" required>
+            </div>
          </div>
-
-         <input type="submit" name="order" class="btn <?=($grand_total > 1) ? '' : 'disabled'; ?>" value="place order">
+         </br>
+         <input type="submit" name="order" class="btn <?=($grand_total > 1) ? '' : 'disabled'; ?>"
+            value="place Booking">
 
       </form>
 

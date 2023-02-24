@@ -60,7 +60,7 @@ if (!isset($admin_id)) {
                <?= $total_pendings; ?>
             </h3>
             <p>total pendings</p>
-            <a href="placed_orders.php" class="btn">see bookings</a>
+            <a href="placed_orders.php" class="btn">see pending bookings</a>
          </div>
 
          <div class="box">
@@ -78,7 +78,7 @@ if (!isset($admin_id)) {
                <?= $total_completes; ?>
             </h3>
             <p>completed bookings</p>
-            <a href="placed_orders.php" class="btn">see bookings</a>
+            <a href="placed_orders.php" class="btn">see completed bookings</a>
          </div>
 
          <div class="box">

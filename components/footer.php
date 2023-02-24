@@ -20,8 +20,8 @@
 
       <div class="box">
          <h3>contact us</h3>
-         <a href="tel:1234567890"><i class="fas fa-phone"></i> +123 456 7899</a>
-         <a href="tel:11122233333"><i class="fas fa-phone"></i> +111 222 3333</a>
+         <a href="tel:1234567890"><i class="fas fa-mobile"></i> 09771925064</a>
+         <a href="tel:11122233333"><i class="fas fa-phone"></i> 73730171</a>
          <a href="mailto:ezhomecareph@gmail.com"><i class="fas fa-envelope"></i> ezhomecareph@gmail.com</a>
       </div>
 
