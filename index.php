@@ -38,6 +38,57 @@ include 'components/wishlist_cart.php';
 
    <?php include 'components/user_header.php'; ?>
 
+   <div class="home-bg">
+
+      <section class="home">
+
+         <div class="swiper home-slider">
+
+            <div class="swiper-wrapper">
+
+               <div class="swiper-slide slide">
+                  <div class="image">
+                     <img src="images/nanyyonthego2.png" alt="">
+                  </div>
+                  <div class="content">
+                     <span>The best babysitter package!</span>
+                     <h3>Nanny on the go!</h3>
+                     <a href="shop.php" class="btn">browse now</a>
+                  </div>
+               </div>
+
+               <div class="swiper-slide slide">
+                  <div class="image">
+                     <img src="images/theloyal.png" alt="">
+                  </div>
+                  <div class="content">
+                     <span>Best house cleaning service!</span>
+                     <h3>'The Loyal'</h3>
+                     <a href="shop.php" class="btn">browse now</a>
+                  </div>
+               </div>
+
+               <div class="swiper-slide slide">
+                  <div class="image">
+                     <img src="images/wonderwoman.png" alt="">
+                  </div>
+                  <div class="content">
+                     <span>Cleaning and laundry? we got you.</span>
+                     <h3>The 'Wonderwoman'</h3>
+                     <a href="shop.php" class="btn">browse now</a>
+                  </div>
+               </div>
+
+            </div>
+
+            <div class="swiper-pagination"></div>
+
+         </div>
+
+      </section>
+
+   </div>
+
    <section class="home-products">
 
       <h1 class="heading">Services</h1>
