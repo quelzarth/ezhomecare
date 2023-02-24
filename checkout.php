@@ -33,7 +33,7 @@ if (isset($_POST['order'])) {
    $proof_of_payment = filter_var($proof_of_payment, FILTER_SANITIZE_STRING);
    $proof_of_payment_size = $_FILES['proof_of_payment']['size'];
    $proof_of_payment_tmp_name = $_FILES['proof_of_payment']['tmp_name'];
-   $proof_of_payment_folder = 'uploaded_img/'.$proof_of_payment;
+   $proof_of_payment_folder = 'uploaded_img/' . $proof_of_payment;
 
    $check_cart = $conn->prepare("SELECT * FROM `cart` WHERE user_id = ?");
    $check_cart->execute([$user_id]);
@@ -43,10 +43,10 @@ if (isset($_POST['order'])) {
       $insert_order = $conn->prepare("INSERT INTO `bookings`(user_id, name, number, email, method, address, service_date, total_products, total_price, proof_of_payment) VALUES(?,?,?,?,?,?,?,?,?,?)");
       $insert_order->execute([$user_id, $name, $number, $email, $method, $address, $service_date, $total_products, $total_price, $proof_of_payment]);
 
-      if($insert_order){
-         if($proof_of_payment_size > 2000000){
+      if ($insert_order) {
+         if ($proof_of_payment_size > 2000000) {
             $message[] = 'image size is too large!';
-         }else{
+         } else {
             move_uploaded_file($proof_of_payment_tmp_name, $proof_of_payment_folder);
          }
 
@@ -126,16 +126,17 @@ if (isset($_POST['order'])) {
          <div class="flex">
             <div class="inputBox">
                <span>Your Name :</span>
-               <input type="text" name="name" placeholder="enter your name" class="box" maxlength="20" required>
+               <input type="text" name="name" placeholder="e.g. John Michael" class="box" maxlength="20" required>
             </div>
             <div class="inputBox">
                <span>Your Number :</span>
-               <input type="number" name="number" placeholder="enter your number" class="box" min="0" max="9999999999"
+               <input type="tel" name="number" placeholder="e.g. 09175602142" class="box" pattern="09[0-9]{9}"
                   onkeypress="if(this.value.length == 11) return false;" required>
             </div>
             <div class="inputBox">
                <span>Your Email :</span>
-               <input type="email" name="email" placeholder="enter your email" class="box" maxlength="50" required>
+               <input type="email" name="email" placeholder="e.g. jakepaul@gmail.com"
+                  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" class="box" maxlength="50" required>
             </div>
             <div class="inputBox">
                <span>Payment Method :</span>
@@ -146,12 +147,12 @@ if (isset($_POST['order'])) {
             </div>
             <div class="inputBox">
                <span>Address Line 01 :</span>
-               <input type="text" name="flat" placeholder="e.g. Blk 3, Lot 8, Bading Subd." class="box" maxlength="50"
-                  required>
+               <input type="text" name="flat" placeholder="e.g. Blk 3, Lot 8, Villa Muzon Subd." class="box"
+                  maxlength="50" required>
             </div>
             <div class="inputBox">
                <span>Address Line 02 :</span>
-               <input type="text" name="street" placeholder="e.g. Baliko Street" class="box" maxlength="50" required>
+               <input type="text" name="street" placeholder="e.g. Gaya-Gaya St." class="box" maxlength="50" required>
             </div>
             <div class="inputBox">
                <span>City :</span>

@@ -15,7 +15,7 @@ if (isset($message)) {
 
    <section class="flex">
 
-      <a href="home.php" class="logo">EZHome Care<span>.</span></a>
+      <a href="index.php" class="logo"><img src="images/ezhomecare logo.png" height="auto" width="60"></a>
 
       <nav class="navbar">
          <a href="index.php">Home</a>
