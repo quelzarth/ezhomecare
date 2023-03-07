@@ -104,12 +104,11 @@ include 'components/wishlist_cart.php';
             if ($select_products->rowCount() > 0) {
                while ($fetch_product = $select_products->fetch(PDO::FETCH_ASSOC)) {
                   ?>
-                  <form action="" method="post" class="swiper-slide slide">
+                  <form action="checkout.php" method="post" class="swiper-slide slide">
                      <input type="hidden" name="pid" value="<?= $fetch_product['id']; ?>">
                      <input type="hidden" name="name" value="<?= $fetch_product['name']; ?>">
                      <input type="hidden" name="price" value="<?= $fetch_product['price']; ?>">
                      <input type="hidden" name="image" value="<?= $fetch_product['image_01']; ?>">
-                     <button class="fas fa-heart" type="submit" name="add_to_wishlist"></button>
                      <a href="quick_view.php?pid=<?= $fetch_product['id']; ?>" class="fas fa-eye"></a>
                      <img src="uploaded_img/<?= $fetch_product['image_01']; ?>" alt="">
                      <div class="name">
@@ -120,7 +119,7 @@ include 'components/wishlist_cart.php';
                            <?= $fetch_product['price']; ?>
                         </div>
                      </div>
-                     <input type="submit" value="add to cart" class="btn" name="add_to_cart">
+                     <input type="submit" value="Book Service" class="btn" name="add_to_cart">
                   </form>
                   <?php
                }

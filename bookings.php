@@ -58,6 +58,7 @@ if(isset($_SESSION['user_id'])){
       <p>total price : <span>₱<?= $fetch_orders['total_price']; ?></span></p>
       <p>proof of payment :</p><img src="uploaded_img/<?= $fetch_orders['proof_of_payment']; ?>" width="600" height="auto">
       <p> payment status : <span style="color:<?php if($fetch_orders['payment_status'] == 'pending'){ echo 'red'; }else{ echo 'green'; }; ?>"><?= $fetch_orders['payment_status']; ?></span> </p>
+      <p>assigned employee : <span><?= $fetch_orders['employee']; ?></span></p>
    </div>
    <?php
       }

@@ -43,30 +43,33 @@ include 'components/wishlist_cart.php';
       <div class="box-container">
 
          <?php
-         $select_products = $conn->prepare("SELECT * FROM `services`");
-         $select_products->execute();
-         if ($select_products->rowCount() > 0) {
-            while ($fetch_product = $select_products->fetch(PDO::FETCH_ASSOC)) {
+         $sql = "SELECT * FROM employees INNER JOIN services ON employees.job = services.name WHERE employees.status = 'available' GROUP BY services.id;
+         ";
+         $result = $conn->query($sql);
+
+         if ($result->rowCount() > 0) {
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                ?>
-               <form action="" method="post" class="box">
-                  <input type="hidden" name="pid" value="<?= $fetch_product['id']; ?>">
-                  <input type="hidden" name="name" value="<?= $fetch_product['name']; ?>">
-                  <input type="hidden" name="price" value="<?= $fetch_product['price']; ?>">
-                  <input type="hidden" name="image" value="<?= $fetch_product['image_01']; ?>">
-                  <a href="quick_view.php?pid=<?= $fetch_product['id']; ?>" class="fas fa-eye"></a>
-                  <img src="uploaded_img/<?= $fetch_product['image_01']; ?>" alt="">
+               <form action="checkout.php" method="post" class="box">
+                  <input type="hidden" name="pid" value="<?= $row['id']; ?>">
+                  <input type="hidden" name="name" value="<?= $row['name']; ?>">
+                  <input type="hidden" name="price" value="<?= $row['price']; ?>">
+                  <input type="hidden" name="image" value="<?= $row['image_01']; ?>">
+                  <a href="quick_view.php?pid=<?= $row['id']; ?>" class="fas fa-eye"></a>
+                  <img src="uploaded_img/<?= $row['image_01']; ?>" alt="">
                   <div class="name">
-                     <?= $fetch_product['name']; ?>
+                     <?= $row['name']; ?>
                   </div>
                   <div class="flex">
                      <div class="price"><span>₱</span>
-                        <?= $fetch_product['price']; ?><span></span>
+                        <?= $row['price']; ?><span></span>
                      </div>
                   </div>
-                  <input type="submit" value="Add to Cart" class="btn" name="add_to_cart">
+                  <input type="submit" value="Book Service" class="btn" name="add_to_cart">
                </form>
                <?php
             }
+
          } else {
             echo '<p class="empty">no products found!</p>';
          }

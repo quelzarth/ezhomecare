@@ -12,6 +12,8 @@ if (isset($_SESSION['user_id'])) {
 }
 ;
 
+include 'components/wishlist_cart.php';
+
 if (isset($_POST['order'])) {
 
    $name = $_POST['name'];
@@ -54,8 +56,7 @@ if (isset($_POST['order'])) {
 
       $delete_cart = $conn->prepare("DELETE FROM `cart` WHERE user_id = ?");
       $delete_cart->execute([$user_id]);
-
-      $message[] = 'order placed successfully!';
+      header('location:bookings.php');
    } else {
       $message[] = 'your cart is empty';
    }
@@ -89,23 +90,25 @@ if (isset($_POST['order'])) {
 
       <form action="" method="POST" enctype="multipart/form-data">
 
-         <h3>Your Services</h3>
+         <h3>Your Service</h3>
 
          <div class="display-orders">
             <?php
             $grand_total = 0;
             $cart_items[] = '';
-            $select_cart = $conn->prepare("SELECT * FROM `cart` WHERE user_id = ?");
-            $select_cart->execute([$user_id]);
+            $pid = $_POST['pid'];
+            $pid = filter_var($pid, FILTER_SANITIZE_STRING);
+            $select_cart = $conn->prepare("SELECT * FROM `cart` WHERE user_id = ? and pid = ?");
+            $select_cart->execute([$user_id, $pid]);
             if ($select_cart->rowCount() > 0) {
                while ($fetch_cart = $select_cart->fetch(PDO::FETCH_ASSOC)) {
-                  $cart_items[] = $fetch_cart['name'] . ' (' . $fetch_cart['price'] . ') - ';
+                  $cart_items[] = $fetch_cart['name'];
                   $total_products = implode($cart_items);
                   $grand_total += ($fetch_cart['price']);
                   ?>
                   <p>
                      <?= $fetch_cart['name']; ?> <span>(
-                        <?='₱' . $fetch_cart['price']; ?>)
+                        <?= '₱' . $fetch_cart['price']; ?>)
                      </span>
                   </p>
                   <?php
@@ -116,100 +119,98 @@ if (isset($_POST['order'])) {
             ?>
             <input type="hidden" name="total_products" value="<?= $total_products; ?>">
             <input type="hidden" name="total_price" value="<?= $grand_total; ?>" value="">
-            <div class="grand-total">grand total : <span>₱
-                  <?= $grand_total; ?>
-               </span></div>
-         </div>
+            <div class="grand-total">
+            </div>
 
-         <h3>Place your Bookings</h3>
+            <h3>Place your Booking</h3>
 
-         <div class="flex">
-            <div class="inputBox">
-               <span>Your Name :</span>
-               <input type="text" name="name" placeholder="e.g. John Michael" class="box" maxlength="20" required>
+            <div class="flex">
+               <div class="inputBox">
+                  <span>Your Name :</span>
+                  <input type="text" name="name" placeholder="e.g. John Michael" class="box" maxlength="20" required>
+               </div>
+               <div class="inputBox">
+                  <span>Your Number :</span>
+                  <input type="tel" name="number" placeholder="e.g. 09175602142" class="box" pattern="09[0-9]{9}"
+                     onkeypress="if(this.value.length == 11) return false;" required>
+               </div>
+               <div class="inputBox">
+                  <span>Your Email :</span>
+                  <input type="email" name="email" placeholder="e.g. jakepaul@gmail.com"
+                     pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" class="box" maxlength="50" required>
+               </div>
+               <div class="inputBox">
+                  <span>Payment Method :</span>
+                  <select name="method" class="box" required>
+                     <option value="gcash">GCash</option>
+                     <option value="bank transfer">Bank Transfer</option>
+                  </select>
+               </div>
+               <div class="inputBox">
+                  <span>Address Line 01 :</span>
+                  <input type="text" name="flat" placeholder="e.g. Blk 3, Lot 8, Villa Muzon Subd." class="box"
+                     maxlength="50" required>
+               </div>
+               <div class="inputBox">
+                  <span>Address Line 02 :</span>
+                  <input type="text" name="street" placeholder="e.g. Gaya-Gaya St." class="box" maxlength="50" required>
+               </div>
+               <div class="inputBox">
+                  <span>City :</span>
+                  <select name="city" class="box" required>
+                     <option value="Tungko, Bulacan">Tungko, Bulacan</option>
+                     <option value="Quezon">Quezon City</option>
+                     <option value="Makati">Makati</option>
+                     <option value="Manila">Manila</option>
+                  </select>
+               </div>
+               <div class="inputBox">
+                  <span>Zip Code :</span>
+                  <input type="number" min="0" name="pin_code" placeholder="e.g. 3032" min="0" max="999999"
+                     onkeypress="if(this.value.length == 4) return false;" class="box" required>
+               </div>
+               <div class="inputBox">
+                  <span>Date of Service :</span>
+                  <input type="date" name="service_date" class="box" min="<?php echo date("Y-m-d"); ?>" required>
+               </div>
+               <div class="inputBox">
+               </div>
+               <div class="inputBox">
+                  <span><b>*READ BEFORE PROCEEDING*</b></span>
+               </div>
+               <div class="inputBox">
+               </div>
+               <div class="inputBox">
+                  <span>*A downpayment of 50% of total price should be paid upon booking with <b>GCash</b> or <b>Bank
+                        Transfer</b></span>
+               </div>
+               <div class="inputBox">
+                  <span>*The remaining 50% of total price will be paid upfront upon staff arrival</span>
+               </div>
+               <div class="inputBox">
+                  <span><b>GCash QR Code :</b> </span>
+                  <img src="images/gcash.jpg" alt="" width="400" height="auto">
+               </div>
+               <div class="inputBox">
+                  <span><b>Bank Transfer Details :</b> </span>
+                  </br> </br>
+                  <span><b>Account Name:</b> Gerlie Mariel Fernandez </br>
+                     <b>Account:</b> 001271647735 </br>
+                     <b>Bank:</b></br>BDO UNIBANK, INC. </br>
+                     7899 </br>
+                     BDO CORPORATE CENTER </br>
+                     CITY OF MAKATI Philippines </br>
+                     <b>SWIFT/BIC:</b> BNORPHMM</span>
+               </div>
+               <div class="inputBox">
+                  <span>Proof of Payment (50% Downpayment)</span>
+                  <input type="file" name="proof_of_payment" accept="image/jpg, image/jpeg, image/png, image/webp"
+                     class="box" required>
+               </div>
             </div>
-            <div class="inputBox">
-               <span>Your Number :</span>
-               <input type="tel" name="number" placeholder="e.g. 09175602142" class="box" pattern="09[0-9]{9}"
-                  onkeypress="if(this.value.length == 11) return false;" required>
-            </div>
-            <div class="inputBox">
-               <span>Your Email :</span>
-               <input type="email" name="email" placeholder="e.g. jakepaul@gmail.com"
-                  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" class="box" maxlength="50" required>
-            </div>
-            <div class="inputBox">
-               <span>Payment Method :</span>
-               <select name="method" class="box" required>
-                  <option value="gcash">GCash</option>
-                  <option value="bank transfer">Bank Transfer</option>
-               </select>
-            </div>
-            <div class="inputBox">
-               <span>Address Line 01 :</span>
-               <input type="text" name="flat" placeholder="e.g. Blk 3, Lot 8, Villa Muzon Subd." class="box"
-                  maxlength="50" required>
-            </div>
-            <div class="inputBox">
-               <span>Address Line 02 :</span>
-               <input type="text" name="street" placeholder="e.g. Gaya-Gaya St." class="box" maxlength="50" required>
-            </div>
-            <div class="inputBox">
-               <span>City :</span>
-               <select name="city" class="box" required>
-                  <option value="Tungko, Bulacan">Tungko, Bulacan</option>
-                  <option value="Quezon">Quezon City</option>
-                  <option value="Makati">Makati</option>
-                  <option value="Manila">Manila</option>
-               </select>
-            </div>
-            <div class="inputBox">
-               <span>Zip Code :</span>
-               <input type="number" min="0" name="pin_code" placeholder="e.g. 3032" min="0" max="999999"
-                  onkeypress="if(this.value.length == 4) return false;" class="box" required>
-            </div>
-            <div class="inputBox">
-               <span>Date of Service :</span>
-               <input type="date" name="service_date" class="box" min="<?php echo date("Y-m-d"); ?>" required>
-            </div>
-            <div class="inputBox">
-            </div>
-            <div class="inputBox">
-               <span><b>*READ BEFORE PROCEEDING*</b></span>
-            </div>
-            <div class="inputBox">
-            </div>
-            <div class="inputBox">
-               <span>*A downpayment of 50% of total price should be paid upon booking with <b>GCash</b> or <b>Bank
-                     Transfer</b></span>
-            </div>
-            <div class="inputBox">
-               <span>*The remaining 50% of total price will be paid upfront upon staff arrival</span>
-            </div>
-            <div class="inputBox">
-               <span><b>GCash QR Code :</b> </span>
-               <img src="images/gcash.jpg" alt="" width="400" height="auto">
-            </div>
-            <div class="inputBox">
-               <span><b>Bank Transfer Details :</b> </span>
-               </br> </br>
-               <span><b>Account Name:</b> Gerlie Mariel Fernandez </br>
-                  <b>Account:</b> 001271647735 </br>
-                  <b>Bank:</b></br>BDO UNIBANK, INC. </br>
-                  7899 </br>
-                  BDO CORPORATE CENTER </br>
-                  CITY OF MAKATI Philippines </br>
-                  <b>SWIFT/BIC:</b> BNORPHMM</span>
-            </div>
-            <div class="inputBox">
-               <span>Proof of Payment (50% Downpayment)</span>
-               <input type="file" name="proof_of_payment" accept="image/jpg, image/jpeg, image/png, image/webp"
-                  class="box" required>
-            </div>
-         </div>
-         </br>
-         <input type="submit" name="order" class="btn <?=($grand_total > 1) ? '' : 'disabled'; ?>"
-            value="place Booking">
+            </br>
+            <input type="submit" name="order" class="btn <?= ($grand_total > 1) ? '' : 'disabled'; ?>"
+               value="place Booking">
 
       </form>
 

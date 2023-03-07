@@ -29,7 +29,7 @@ if(isset($_POST['add_product'])){
    $select_products->execute([$name]);
 
    if($select_products->rowCount() > 0){
-      $message[] = 'product name already exist!';
+      $message[] = 'service name already exist!';
    }else{
 
       $insert_products = $conn->prepare("INSERT INTO `services`(name, details, price, image_01) VALUES(?,?,?,?)");
@@ -40,7 +40,7 @@ if(isset($_POST['add_product'])){
             $message[] = 'image size is too large!';
          }else{
             move_uploaded_file($image_tmp_name_01, $image_folder_01);
-            $message[] = 'new product added!';
+            $message[] = 'new service added!';
          }
 
       }
@@ -87,16 +87,16 @@ if(isset($_GET['delete'])){
 
 <section class="add-products">
 
-   <h1 class="heading">add product</h1>
+   <h1 class="heading">add service</h1>
 
    <form action="" method="post" enctype="multipart/form-data">
       <div class="flex">
          <div class="inputBox">
-            <span>product name (required)</span>
+            <span>service name (required)</span>
             <input type="text" class="box" required maxlength="100" placeholder="enter product name" name="name">
          </div>
          <div class="inputBox">
-            <span>product price (required)</span>
+            <span>service price (required)</span>
             <input type="number" min="0" class="box" required max="9999999999" placeholder="enter product price" onkeypress="if(this.value.length == 10) return false;" name="price">
          </div>
         <div class="inputBox">
@@ -104,7 +104,7 @@ if(isset($_GET['delete'])){
             <input type="file" name="image_01" accept="image/jpg, image/jpeg, image/png, image/webp" class="box" required>
         </div>
          <div class="inputBox">
-            <span>product details (required)</span>
+            <span>service details (required)</span>
             <textarea name="details" placeholder="enter product details" class="box" required maxlength="500" cols="30" rows="10"></textarea>
          </div>
       </div>
@@ -116,7 +116,7 @@ if(isset($_GET['delete'])){
 
 <section class="show-products">
 
-   <h1 class="heading">products added</h1>
+   <h1 class="heading">services added</h1>
 
    <div class="box-container">
 

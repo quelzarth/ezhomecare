@@ -14,9 +14,13 @@ if (isset($_POST['update_payment'])) {
    $order_id = $_POST['order_id'];
    $payment_status = $_POST['payment_status'];
    $payment_status = filter_var($payment_status, FILTER_SANITIZE_STRING);
-   $update_payment = $conn->prepare("UPDATE `bookings` SET payment_status = ? WHERE id = ?");
-   $update_payment->execute([$payment_status, $order_id]);
-   $message[] = 'payment status updated!';
+   $employee = $_POST['employee'];
+   $employee = filter_var($employee, FILTER_SANITIZE_STRING);
+   $update_payment = $conn->prepare("UPDATE `bookings` SET payment_status = ?, employee = ? WHERE id = ?");
+   $update_payment->execute([$payment_status, $employee, $order_id]);
+   $update_employee = $conn->prepare("UPDATE `employees` SET status = 'assigned' WHERE name = ?");
+   $update_employee->execute([$employee]);
+   $message[] = 'status updated!';
 }
 
 if (isset($_GET['delete'])) {
@@ -100,6 +104,25 @@ if (isset($_GET['delete'])) {
                         <option value="approved">approved</option>
                         <option value="completed">completed</option>
                      </select>
+                     <p> assigned employee : <span>
+                           <select name="employee" class="box" required>
+                              <option selected disabled>
+                                 <?= $fetch_orders['employee']; ?>
+                              </option>
+                              <?php
+                              $sql = "SELECT employees.name, bookings.total_products FROM employees INNER JOIN bookings ON employees.job = bookings.total_products WHERE employees.status = 'available' GROUP BY employees.id";
+                              $stmt = $conn->prepare($sql);
+                              $stmt->execute();
+                              $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                              if (count($result) > 0) {
+                                 foreach ($result as $row) {
+                                    echo "<option value='" . $row['name'] . "'>" . $row['name'] . "</option>";
+                                 }
+                              }
+                              ?>
+                           </select>
+                        </span> </p>
                      <div class="flex-btn">
                         <input type="submit" value="update" class="option-btn" name="update_payment">
                         <a href="placed_orders.php?delete=<?= $fetch_orders['id']; ?>" class="delete-btn"

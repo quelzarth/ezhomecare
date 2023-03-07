@@ -135,6 +135,19 @@ if (!isset($admin_id)) {
 
          <div class="box">
             <?php
+            $select_employees = $conn->prepare("SELECT * FROM `employees`");
+            $select_employees->execute();
+            $number_of_employees = $select_employees->rowCount()
+               ?>
+            <h3>
+               <?= $number_of_employees; ?>
+            </h3>
+            <p>employees</p>
+            <a href="register_employee.php" class="btn">see employees</a>
+         </div>
+
+         <div class="box">
+            <?php
             $select_messages = $conn->prepare("SELECT * FROM `messages`");
             $select_messages->execute();
             $number_of_messages = $select_messages->rowCount()
