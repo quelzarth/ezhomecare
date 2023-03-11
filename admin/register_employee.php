@@ -91,7 +91,7 @@ if (isset($_GET['delete'])) {
          <div class="flex">
             <div class="inputBox">
                <span>employee name (required)</span>
-               <input type="text" class="box" required maxlength="100" placeholder="enter product name" name="name">
+               <input type="text" class="box" required maxlength="100" placeholder="enter employee name" name="name">
             </div>
             <div class="inputBox">
                <span>image (required)</span>

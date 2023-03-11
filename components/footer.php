@@ -14,7 +14,7 @@
          <a href="user_login.php"> <i class="fas fa-angle-right"></i> login</a>
          <a href="user_register.php"> <i class="fas fa-angle-right"></i> register</a>
          <a href="shop.php"> <i class="fas fa-angle-right"></i> services</a>
-         <a href="orders.php"> <i class="fas fa-angle-right"></i> bookings</a>
+         <a href="bookings.php"> <i class="fas fa-angle-right"></i> bookings</a>
       </div>
 
       <div class="box">

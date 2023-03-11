@@ -71,7 +71,7 @@ include 'components/wishlist_cart.php';
             }
 
          } else {
-            echo '<p class="empty">no products found!</p>';
+            echo '<p class="empty">no services available yet!</p>';
          }
          ?>
 

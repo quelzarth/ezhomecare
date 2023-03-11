@@ -96,11 +96,12 @@ if (isset($_POST['submit'])) {
 
       <form action="" method="post">
          <h3>register now</h3>
-         <input type="text" name="name" required placeholder="e.g. pogiako" maxlength="20" class="box">
-         <input type="email" name="email" required placeholder="e.g. lbjgoat@gmail.com" maxlength="50"
+         <h2>(all fields are required)</h2>
+         <input type="text" name="name" required placeholder="enter username" maxlength="20" class="box">
+         <input type="email" name="email" required placeholder="enter email" maxlength="50"
             pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" class="box"
             oninput="this.value = this.value.replace(/\s/g, '')">
-         <input type="password" name="pass" required placeholder="e.g. Password1"
+         <input type="password" name="pass" required placeholder="enter password"
             pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
             title="Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters"
             maxlength="20" class="box" oninput="this.value = this.value.replace(/\s/g, '')">

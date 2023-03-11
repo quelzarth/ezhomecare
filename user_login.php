@@ -24,13 +24,11 @@ if (isset($_POST['submit'])) {
 
    if ($select_user->rowCount() > 0 && $row['email_verified_at'] == null) {
       $message[] = "Please enter code sent to your email. <a href='email-verification.php?email=" . $email . "'>Click Here</a>";
-   }
-
-   else if ($select_user->rowCount() > 0 && $row['email_verified_at'] != null) {
+   } else if ($select_user->rowCount() > 0 && $row['email_verified_at'] != null) {
       $_SESSION['user_id'] = $row['id'];
       header('location:index.php');
    } else {
-      $message[] = 'account does not exist';
+      $message[] = 'incorrect email/password';
    }
 
 }

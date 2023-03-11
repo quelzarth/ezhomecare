@@ -16,11 +16,20 @@ if (isset($_POST['update_payment'])) {
    $payment_status = filter_var($payment_status, FILTER_SANITIZE_STRING);
    $employee = $_POST['employee'];
    $employee = filter_var($employee, FILTER_SANITIZE_STRING);
-   $update_payment = $conn->prepare("UPDATE `bookings` SET payment_status = ?, employee = ? WHERE id = ?");
-   $update_payment->execute([$payment_status, $employee, $order_id]);
-   $update_employee = $conn->prepare("UPDATE `employees` SET status = 'assigned' WHERE name = ?");
-   $update_employee->execute([$employee]);
-   $message[] = 'status updated!';
+   if ($payment_status == 'approved') {
+      $update_payment = $conn->prepare("UPDATE `bookings` SET payment_status = ?, employee = ? WHERE id = ?");
+      $update_payment->execute([$payment_status, $employee, $order_id]);
+      $update_employee = $conn->prepare("UPDATE `employees` SET status = 'assigned' WHERE name = ?");
+      $update_employee->execute([$employee]);
+      $message[] = 'status updated!';
+   } else if ($payment_status == 'completed') {
+      $update_payment = $conn->prepare("UPDATE `bookings` SET payment_status = ?, employee = ? WHERE id = ?");
+      $update_payment->execute([$payment_status, $employee, $order_id]);
+      $update_employee = $conn->prepare("UPDATE `employees` SET status = 'available' WHERE name = ?");
+      $update_employee->execute([$employee]);
+      $message[] = 'status updated!';
+   }
+
 }
 
 if (isset($_GET['delete'])) {
@@ -97,7 +106,7 @@ if (isset($_GET['delete'])) {
                   <form action="" method="post">
                      <input type="hidden" name="order_id" value="<?= $fetch_orders['id']; ?>">
                      <select name="payment_status" class="select">
-                        <option selected disabled>
+                        <option selected>
                            <?= $fetch_orders['payment_status']; ?>
                         </option>
                         <option value="pending">pending</option>
@@ -105,8 +114,8 @@ if (isset($_GET['delete'])) {
                         <option value="completed">completed</option>
                      </select>
                      <p> assigned employee : <span>
-                           <select name="employee" class="box" required>
-                              <option selected disabled>
+                           <select name="employee" class="select" required>
+                              <option selected>
                                  <?= $fetch_orders['employee']; ?>
                               </option>
                               <?php
